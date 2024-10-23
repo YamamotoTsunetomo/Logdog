@@ -59,11 +59,6 @@ class LoggingInterceptor : Interceptor {
         message.append("time_took:::").append(requestTimeNano).append("\n")
 
         val responseBody = response.body
-        for (i in 0 until response.headers.size) {
-            val name = headers.name(i)
-            message.append("header:::").append(name).append("\n")
-        }
-
         message
             .append("response_body:::")
             .append(responseBody?.string()?.replace("\n", ""))
