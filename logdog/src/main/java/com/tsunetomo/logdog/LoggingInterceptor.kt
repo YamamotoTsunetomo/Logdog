@@ -26,8 +26,10 @@ class LoggingInterceptor : Interceptor {
             .append("content_length:::").append(requestBody?.contentLength())
             .append("\n")
 
-        headers.forEachIndexed { index, header ->
-            message.append("header $index:::").append(header).append("\n")
+        for (i in 0 until headers.size) {
+            val name = headers.name(i)
+            message.append("header:::").append(name).append("\n")
+
         }
 
         val startTime = System.nanoTime()
@@ -57,8 +59,9 @@ class LoggingInterceptor : Interceptor {
         message.append("time_took:::").append(requestTimeNano).append("\n")
 
         val responseBody = response.body
-        response.headers.forEachIndexed { index, header ->
-            message.append("header $index:::").append(header).append("\n")
+        for (i in 0 until response.headers.size) {
+            val name = headers.name(i)
+            message.append("header:::").append(name).append("\n")
         }
 
         message
