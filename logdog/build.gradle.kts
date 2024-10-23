@@ -34,7 +34,7 @@ android {
 }
 
 fun getVersionName(): String {
-    return "1.0.6"
+    return "1.0.8"
 }
 
 fun getArtifactId(): String {
