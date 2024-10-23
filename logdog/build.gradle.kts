@@ -62,7 +62,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("")
+            url = uri("https://maven.pkg.github.com/YamamotoTsunetomo/Logdog")
             credentials {
                 username = githubProperties.getProperty("gpr.usr") ?: System.getenv("GPR_USER")
                 password = githubProperties.getProperty("gpr.key") ?: System.getenv("GPR_API_KEY")
