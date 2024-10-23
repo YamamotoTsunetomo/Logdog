@@ -37,7 +37,7 @@ android {
 }
 
 fun getVersionName(): String {
-    return "1.0.5"
+    return "1.0.6"
 }
 
 fun getArtifactId(): String {
@@ -54,6 +54,10 @@ publishing {
                 artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
             }
         }
+    }
+
+    tasks.named<PublishToMavenLocal>("publishGprPublicationToMavenLocal") {
+        dependsOn(tasks.named("bundleReleaseAar"))
     }
 
 }
