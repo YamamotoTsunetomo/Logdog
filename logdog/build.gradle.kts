@@ -40,7 +40,7 @@ val githubProperties = Properties()
 githubProperties.load(FileInputStream(rootProject.file("github.properties")))
 
 fun getVersionName(): String {
-    return "1.0.3"
+    return "1.0.4"
 }
 
 fun getArtifactId(): String {
@@ -59,16 +59,6 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/YamamotoTsunetomo/Logdog")
-            credentials {
-                username = githubProperties.getProperty("gpr.usr") ?: System.getenv("GPR_USER")
-                password = githubProperties.getProperty("gpr.key") ?: System.getenv("GPR_API_KEY")
-            }
-        }
-    }
 }
 
 dependencies {
