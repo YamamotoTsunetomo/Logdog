@@ -51,7 +51,7 @@ publishing {
     publications {
         create<MavenPublication>("gpr") {
             run {
-                groupId = "com.tsunetomo.libs"
+                groupId = "com.github.yamamototsunetomo"
                 artifactId = getArtifactId()
                 version = getVersionName()
                 artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
