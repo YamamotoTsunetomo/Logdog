@@ -7,9 +7,10 @@ import okio.Buffer
 import java.nio.charset.Charset
 
 class LoggingInterceptor : Interceptor {
-    var tag = "Logdog"
+    var tag: String = "Logdog"
 
     override fun intercept(chain: Interceptor.Chain): Response {
+        var charset = Charset.forName("UTF-8")
         val request = chain.request()
         val requestBody = request.body
         val connection = chain.connection()
@@ -34,17 +35,15 @@ class LoggingInterceptor : Interceptor {
 
         }
 
-        val buffer = Buffer()
-        requestBody?.writeTo(buffer)
-
-        var charset = Charset.forName("UTF-8")
-        val contentType = requestBody?.contentType()
-        if (contentType != null) {
-            charset = contentType.charset(charset)
+        val reqBodyBuf = Buffer()
+        requestBody?.writeTo(reqBodyBuf)
+        val reqContentType = requestBody?.contentType()
+        if (reqContentType != null) {
+            charset = reqContentType.charset(charset)
         }
 
         message.append("body:::")
-            .append(buffer.readString(charset).replace("\n", ""))
+            .append(reqBodyBuf.readString(charset).replace("\n", ""))
             .append("\n")
 
         val startTime = System.nanoTime()
@@ -71,9 +70,20 @@ class LoggingInterceptor : Interceptor {
         message.append("time_took:::").append(requestTimeNano).append("\n")
 
         val responseBody = response.body
+        val respBodyBuf = responseBody?.let {
+            val source = it.source()
+            source.request(Long.MAX_VALUE)
+            source.buffer
+        }
+
+        val respContentType = responseBody?.contentType()
+        if (respContentType != null) {
+            charset = respContentType.charset(charset)
+        }
+
         message
             .append("response_body:::")
-            .append(responseBody?.string()?.replace("\n", ""))
+            .append(respBodyBuf?.clone()?.readString(charset)?.replace("\n", ""))
             .append("\n")
             .append("end_resp")
 
