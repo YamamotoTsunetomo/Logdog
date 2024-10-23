@@ -1,4 +1,5 @@
 plugins {
+    id("maven-publish")
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
@@ -38,6 +39,24 @@ fun getVersionName(): String {
 
 fun getArtifactId(): String {
     return "logdog"
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("gpr") {
+            run {
+                groupId = "com.github.yamamototsunetomo"
+                artifactId = getArtifactId()
+                version = getVersionName()
+                artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
+            }
+        }
+    }
+
+    tasks.named<PublishToMavenLocal>("publishGprPublicationToMavenLocal") {
+        dependsOn(tasks.named("bundleReleaseAar"))
+    }
+
 }
 
 dependencies {
