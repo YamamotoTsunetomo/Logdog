@@ -3,6 +3,8 @@ package com.tsunetomo.logdog
 import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
+import okio.Buffer
+import java.nio.charset.Charset
 
 class LoggingInterceptor : Interceptor {
     var tag = "Logdog"
@@ -32,11 +34,21 @@ class LoggingInterceptor : Interceptor {
 
         }
 
+        val buffer = Buffer()
+        requestBody?.writeTo(buffer)
+
+        var charset = Charset.forName("UTF-8")
+        val contentType = requestBody?.contentType()
+        if (contentType != null) {
+            charset = contentType.charset(charset)
+        }
+
+        message.append("body:::")
+            .append(buffer.readString(charset).replace("\n", ""))
+            .append("\n")
+
         val startTime = System.nanoTime()
         message
-            .append("body:::")
-            .append(requestBody?.toString()?.replace("\n", ""))
-            .append("\n")
             .append("start_time:::")
             .append(startTime)
             .append("\n")
