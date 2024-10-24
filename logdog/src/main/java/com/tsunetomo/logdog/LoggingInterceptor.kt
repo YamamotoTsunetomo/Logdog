@@ -23,10 +23,10 @@ class LoggingInterceptor(private val tag: String = DEFAULT_TAG) : Interceptor {
             KEY_CONTENT_LENGTH to requestBody?.contentLength()
         )
 
-        for (i in 0 until headers.size) {
-            val name = headers.name(i)
-            message.appendKeyValue(KEY_HEADER, name)
-        }
+        message.appendKeyValue(
+            KEY_HEADER,
+            headers.joinToString(";") { "${it.first},${it.second}" }
+        )
 
         val reqBodyBuf = Buffer()
         requestBody?.writeTo(reqBodyBuf)
