@@ -44,7 +44,7 @@ class LoggingInterceptor(private val tag: String = DEFAULT_TAG) : Interceptor {
         message.appendKeyValue(KEY_START_TIME, startTime).append(END_REQ)
         Log.d(tag, message.toString())
 
-        message.clear().appendKeyValue(START_RESP, startTime)
+        message.clear().append(START_RESP).append("\n").appendKeyValue(KEY_START_TIME, startTime)
         val response = try {
             chain.proceed(request)
         } catch (e: Exception) {

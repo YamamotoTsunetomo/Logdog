@@ -1,6 +1,7 @@
 package com.tsunetomo.logdog
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,18 +32,20 @@ class MainActivity : AppCompatActivity() {
             .url("https://jsonplaceholder.typicode.com/posts/1")
             .build()
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Error $e", Toast.LENGTH_SHORT).show()
+        findViewById<Button>(R.id.button).setOnClickListener {
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "Error $e", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
 
-            override fun onResponse(call: Call, response: Response) {
-                runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+                override fun onResponse(call: Call, response: Response) {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 }
