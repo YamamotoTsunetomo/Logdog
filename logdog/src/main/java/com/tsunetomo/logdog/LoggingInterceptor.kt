@@ -8,7 +8,8 @@ import java.nio.charset.Charset
 
 class LoggingInterceptor(private val tag: String = DEFAULT_TAG) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        var charset = Charset.forName(UTF8)
+        var reqCharset = Charset.forName(UTF8)
+        var respCharset = Charset.forName(UTF8)
         val request = chain.request()
         val requestBody = request.body
         val connection = chain.connection()
@@ -32,12 +33,12 @@ class LoggingInterceptor(private val tag: String = DEFAULT_TAG) : Interceptor {
         requestBody?.writeTo(reqBodyBuf)
         val reqContentType = requestBody?.contentType()
         if (reqContentType != null) {
-            charset = reqContentType.charset(charset)
+            reqCharset = reqContentType.charset(reqCharset)
         }
 
         message.appendKeyValue(
             KEY_REQ_BODY,
-            reqBodyBuf.readString(charset).replace("\n", "")
+            reqBodyBuf.readString(reqCharset).replace("\n", "")
         )
 
         val startTime = System.nanoTime()
@@ -69,12 +70,12 @@ class LoggingInterceptor(private val tag: String = DEFAULT_TAG) : Interceptor {
 
         val respContentType = responseBody?.contentType()
         if (respContentType != null) {
-            charset = respContentType.charset(charset)
+            respCharset = respContentType.charset(respCharset)
         }
 
         message.appendKeyValue(
             KEY_RESP_BODY,
-            respBodyBuf?.clone()?.readString(charset)?.replace("\n", "")
+            respBodyBuf?.clone()?.readString(respCharset)?.replace("\n", "")
         ).append(END_RESP)
 
         Log.d(tag, message.toString())
